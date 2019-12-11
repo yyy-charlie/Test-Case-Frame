@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.testcase.frame.mapper.StepSystemModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.testcase.frame.pojo.StepSystemModule" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="module_id" property="moduleId" jdbcType="INTEGER" />
+    <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+    <result column="system_id" property="systemId" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>测试用例框架</title>
+    <link href="/css/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/bootstrap-treeview/bootstrap-treeview.css" rel="stylesheet">
+    <link href="/css/bootstrap-ztree/bootstrapStyle.css" rel="stylesheet">
+    <link href="/css/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+
+    <script src="/js/common/systemCommonQuote.js"></script>
+    <script src="/js/common/commFunction.js"></script>
+    <script src="/js/common/pluginLibrary.js"></script>
+
+
+    <!--    <script src="/js/bootstrap-treeview/bootstrap-treeview.js"></script>-->
+    <!--    <script src="/js/js/MeasurementPoint/hdst.treeview-query2.0.js"></script>-->
+
+    <style>
+        .fixed-table-body {
+            height: 94%;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="row" id="head-top-model">
+        <div class="col-xs-12 new-head" id="headMenu">
+            <nav class="navbar navbar-default" role="navigation" id="navbar">
+                <div class="container-fluid">
+                    <div>
+                        <!--向左对齐-->
+                        <ul class="nav navbar-nav navbar-left">
+                            <li class="navbar-text navbar-left" id="cloud-name">测试用例框架</li>
+                        </ul>
+                        <!--向右对齐-->
+                        <ul class="nav navbar-nav navbar-right" id="sysMenu" style="margin-right: 10px;margin-top:8px">
+                            <li class="dropdown">
+                                <select name="systemChoose" id="selectSystem" class="form-control"
+                                        onchange="refreshSystem(this.value)">
+                                    <!--                                    <option value="1">表计管理App</option>-->
+                                    <!--                                    <option value="2">缴费App</option>-->
+                                    <!--                                    <option value="3">客户关系管理系统</option>-->
+                                    <!--                                    <option value="4">用户与权限管理</option>-->
+                                </select>
+                            </li>
+                            <li class="dropdown">
+                                <select name="systemChoose" id="selectModule" class="form-control"
+                                        onchange="refreshModule(this.value)">
+                                    <!--                                    <option value="1">表计管理App1</option>-->
+                                    <!--                                    <option value="2">表计管理App2</option>-->
+                                    <!--                                    <option value="3">表计管理App3</option>-->
+                                    <!--                                    <option value="4">表计管理App4</option>-->
+                                    <!--                                    <option value="5">表计管理App5</option>-->
+                                    <!--                                    <option value="6">表计管理App6</option>-->
+                                    <!--                                    <option value="7">表计管理App7</option>-->
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row panelWrapper">
+        <div class="treePanelWrapper col-lg-8 col-md-7">
+            <div class="panel panel-primary" id="stepPanel" style="height: 843px;">
+                <div class="panel-heading">用例步骤管理</div>
+                <div class="panel-body">
+
+                    <div class="panel panel-default col-md-8" style="margin-right:10px;padding: 0;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">用例步骤树</h3>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="addRootStepBtn()">
+                            新增根节点
+                        </button>
+
+                        <button type="button" class="btn btn-primary" onclick="stepBindModuleBtn()">
+                            批量绑定模块
+                        </button>
+
+                        <button type="button" class="btn btn-primary" onclick="stepUnbindModuleBtn()">
+                            批量取消绑定模块
+                        </button>
+
+                        <button type="button" class="btn btn-primary" onclick="previewExcel()">
+                            预览Excel
+                        </button>
+
+                        <button type="button" class="btn btn-primary" onclick="exportExcel()">
+                            导出Excel
+                        </button>
+                        <div id="testCaseStepTree" class="ztree" style="height: 640px;overflow: scroll;">
+                        </div>
+                    </div>
+
+                    <!--编辑步骤面板-->
+                    <div class="panel panel-default col-md-3" style="padding: 0;" id="updateStepPanel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">编辑步骤</h3>
+                        </div>
+                        <div class="panel-body">
+                            <input class='form-control' type='text' id='stepId' style="display: none"/>
+
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="testCaseName">步骤名称：</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <input class='form-control' type='text' id='testCaseName'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="testCaseTitle">用例标题：</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='testCaseTitle'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="moduleName">步骤模块名称：</label>
+                                <select class="form-control" id="moduleName" style="margin-left: 28px;">
+                                </select>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="lastStepMarkId">最后一步</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <select class="form-control" id="lastStepMarkId" style="margin-left: 28px;">
+                                    <option value="0">不是</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="manageModule">所属模块</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='manageModule'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="expected">预期</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='expected'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="precondition">前置条件</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='precondition'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="testCaseType">用例类型</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <select class="form-control" id="testCaseType" style="margin-left: 28px;">
+                                    <option value="功能测试">功能测试</option>
+                                    <option value="性能测试">性能测试</option>
+                                    <option value="配置相关">配置相关</option>
+                                    <option value="安装部署">安装部署</option>
+                                    <option value="安全相关">安全相关</option>
+                                    <option value="接口测试">接口测试</option>
+                                    <option value="接口测试">接口测试</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="applicableStage">适用阶段</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <select class="form-control" id="applicableStage" style="margin-left: 28px;">
+                                    <option value="单元测试阶段">单元测试阶段</option>
+                                    <option value="功能测试阶段">功能测试阶段</option>
+                                    <option value="集成测试阶段">集成测试阶段</option>
+                                    <option value="系统测试阶段">系统测试阶段</option>
+                                    <option value="冒烟测试阶段">冒烟测试阶段</option>
+                                    <option value="版本验证阶段">版本验证阶段</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="panel-foot" style="float:right">
+                            <!--                            <button type="button" class="btn btn-default" data-dismiss="modal" id="operateCancel">-->
+                            <!--                                取消-->
+                            <!--                            </button>-->
+                            <button type="button" class="btn btn-primary" onclick="updateStepBtn()">
+                                确定
+                            </button>
+                        </div>
+                    </div>
+
+                    <!--新增步骤面板-->
+                    <div class="panel panel-default col-md-3" style="padding: 0;display: none;" id="addStepPanel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">新增步骤</h3>
+                        </div>
+                        <div class="panel-body">
+
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="lastTestCaseName">上一步步骤名称：</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <input class='form-control' type='text' id='lastTestCaseName'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="testCaseName">步骤名称：</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <input class='form-control' type='text' id='testCaseNameAdd'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="testCaseTitle">用例标题：</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='testCaseTitleAdd'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="manageModuleAdd">所属模块</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='manageModuleAdd'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="lastStepMarkIdAdd">最后一步</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <select class="form-control" id="lastStepMarkIdAdd" style="margin-left: 28px;">
+                                    <option value="0">不是</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="expectedAdd">预期</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='expectedAdd'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="preconditionAdd">前置条件</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;"></span>
+                                <input class='form-control' type='text' id='preconditionAdd'/>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="testCaseType">用例类型</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <select class="form-control" id="testCaseTypeAdd" style="margin-left: 28px;">
+                                    <option value="功能测试">功能测试</option>
+                                    <option value="性能测试">性能测试</option>
+                                    <option value="配置相关">配置相关</option>
+                                    <option value="安装部署">安装部署</option>
+                                    <option value="安全相关">安全相关</option>
+                                    <option value="接口测试">接口测试</option>
+                                    <option value="接口测试">接口测试</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div class='form-group form-inline'>
+                                <label class='label-control' for="applicableStageAdd">适用阶段</label>
+                                <span style="color:red;font-size:18px;vertical-align: middle;">&nbsp;*</span>
+                                <select class="form-control" id="applicableStageAdd" style="margin-left: 28px;">
+                                    <option value="单元测试阶段">单元测试阶段</option>
+                                    <option value="功能测试阶段">功能测试阶段</option>
+                                    <option value="集成测试阶段">集成测试阶段</option>
+                                    <option value="系统测试阶段">系统测试阶段</option>
+                                    <option value="冒烟测试阶段">冒烟测试阶段</option>
+                                    <option value="版本验证阶段">版本验证阶段</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="panel-foot" style="float:right">
+                            <!--                            <button type="button" class="btn btn-default" data-dismiss="modal" id="operateCancel">-->
+                            <!--                                取消-->
+                            <!--                            </button>-->
+                            <button type="button" class="btn btn-primary" onclick="addStepBtn()">
+                                确定
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="infoPanelWrapper col-lg-4 col-md-5" style="padding-left: 0">
+            <div class="panel panel-primary" id="formManage" style="height: 843px;">
+                <div class="panel-heading">步骤模块管理</div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-primary" onclick="addModuleBtn()">
+                        新增模块
+                    </button>
+                    <div class="tableInfo table-responsive" id="stepModule">
+                        <table id="stepModuleTable" class="text-nowrap table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--模态框-->
+<div class="modal fade" id="modal_department" tabindex="-1" role="dialog">
+</div>
+
+<!--预览Excel的模态框-->
+<div class="modal fade" id="modal_preview_excel" tabindex="-1" role="dialog">
+</div>
+
+
+</body>
+
+<script src="/js/test-case-frame.js"></script>
+
+</html>

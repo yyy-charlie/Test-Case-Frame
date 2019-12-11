@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+
+  <!--yapi配置-->
+  <component name="yapi">
+    <option name="projectToken">fa3105b104e1e88f27eac45b9c8a71304717a06a485080beb6547cb559485768</option>
+    <option name="projectId">94</option>
+    <option name="yapiUrl">http://192.168.1.135:3000</option>
+    <option name="projectType">api</option>
+  </component>
+</project>

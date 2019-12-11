@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.testcase.frame.mapper.StepAttrMapper">
+    <resultMap id="BaseResultMap" type="com.testcase.frame.pojo.StepAttr">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="test_case_type" property="testCaseType" jdbcType="VARCHAR"/>
+        <result column="test_case_title" property="testCaseTitle" jdbcType="VARCHAR"/>
+        <result column="step_id" property="stepId" jdbcType="INTEGER"/>
+        <result column="priority" property="priority" jdbcType="VARCHAR"/>
+        <result column="precondition" property="precondition" jdbcType="VARCHAR"/>
+        <result column="manage_module" property="manageModule" jdbcType="VARCHAR"/>
+        <result column="expected" property="expected" jdbcType="VARCHAR"/>
+        <result column="applicable_stage" property="applicableStage" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertStepAttr" parameterType="com.testcase.frame.pojo.StepAttr" useGeneratedKeys="true"
+            keyProperty="stepId">
+        INSERT INTO step_attr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stepAttr.stepId != null and stepAttr.stepId != ''">
+                step_id,
+            </if>
+            <if test="stepAttr.testCaseType != null and stepAttr.testCaseType != ''">
+                test_case_type,
+            </if>
+            <if test="stepAttr.testCaseTitle != null and stepAttr.testCaseTitle != ''">
+                test_case_title,
+            </if>
+            <if test="stepAttr.priority != null and stepAttr.priority != ''">
+                priority,
+            </if>
+            <if test="stepAttr.precondition != null and stepAttr.precondition != ''">
+                precondition,
+            </if>
+            <if test="stepAttr.manageModule != null and stepAttr.manageModule != ''">
+                manage_module,
+            </if>
+            <if test="stepAttr.expected != null and stepAttr.expected != ''">
+                expected,
+            </if>
+            <if test="stepAttr.applicableStage != null and stepAttr.applicableStage != ''">
+                applicable_stage
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stepAttr.stepId != null and stepAttr.stepId != ''">
+                #{stepAttr.stepId,jdbcType=INTEGER},
+            </if>
+            <if test="stepAttr.testCaseType != null and stepAttr.testCaseType != ''">
+                #{stepAttr.testCaseType,jdbcType=VARCHAR},
+            </if>
+            <if test="stepAttr.testCaseTitle != null and stepAttr.testCaseTitle != ''">
+                #{stepAttr.testCaseTitle},
+            </if>
+            <if test="stepAttr.priority != null and stepAttr.priority != ''">
+                #{stepAttr.priority},
+            </if>
+            <if test="stepAttr.precondition != null and stepAttr.precondition != ''">
+                #{stepAttr.precondition},
+            </if>
+            <if test="stepAttr.manageModule != null and stepAttr.manageModule != ''">
+                #{stepAttr.manageModule},
+            </if>
+            <if test="stepAttr.expected != null and stepAttr.expected != ''">
+                #{stepAttr.expected},
+            </if>
+            <if test="stepAttr.applicableStage != null and stepAttr.applicableStage != ''">
+                #{stepAttr.applicableStage}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="batchDeleteStepAttr" parameterType="com.testcase.frame.pojo.StepAttr">
+        DELETE FROM step_attr WHERE step_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.stepId}
+        </foreach>
+    </delete>
+
+</mapper>

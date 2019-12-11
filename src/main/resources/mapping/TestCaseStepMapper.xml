@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.testcase.frame.mapper.TestCaseStepMapper">
+    <resultMap id="BaseResultMap" type="com.testcase.frame.pojo.TestCaseStep">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="step_id" property="stepId" jdbcType="INTEGER"/>
+        <result column="step_name" property="stepName" jdbcType="VARCHAR"/>
+        <result column="step_parent_id" property="stepParentId" jdbcType="INTEGER"/>
+        <result column="single_step_mark_id" property="singleStepMarkId" jdbcType="INTEGER"/>
+        <result column="last_step_mark_id" property="lastStepMarkId" jdbcType="INTEGER"/>
+        <result column="system_id" property="systemId" jdbcType="INTEGER"/>
+        <result column="module_id" property="moduleId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <insert id="batchInsertStepList" useGeneratedKeys="true" keyProperty="stepId"
+            parameterType="com.testcase.frame.pojo.TestCaseStep">
+        INSERT INTO test_case_step
+        (step_name, step_parent_id, system_id,module_id,single_step_mark_id,last_step_mark_id) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.stepName,jdbcType=VARCHAR},
+            #{item.stepParentId,jdbcType=INTEGER},
+            #{item.systemId,jdbcType=INTEGER},
+            #{item.moduleId,jdbcType=INTEGER},
+            #{item.singleStepMarkId,jdbcType=INTEGER},
+            #{item.lastStepMarkId,jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getParentStepList" parameterType="java.lang.Integer" resultType="com.testcase.frame.pojo.TestCaseStep">
+        SELECT step_id AS stepId,step_name AS stepName,
+        single_step_mark_id AS singleStepMarkId, last_step_mark_id AS lastStepMarkId
+        from test_case_step where FIND_IN_SET(step_id,queryParentStepList(#{stepId})) ORDER BY step_id;
+    </select>
+
+    <select id="getChildrenStepList" parameterType="java.lang.Integer"
+            resultType="com.testcase.frame.pojo.TestCaseStep">
+        SELECT step_id AS stepId, step_name AS stepName, step_parent_id AS stepParentId, single_step_mark_id AS singleStepMarkId, system_id AS systemId ,module_id AS moduleId from test_case_step
+        where FIND_IN_SET(step_id,queryChildrenStepList(#{stepId})) ORDER BY step_id;
+    </select>
+
+    <delete id="batchDeleteStepList" parameterType="com.testcase.frame.pojo.TestCaseStep">
+        DELETE FROM test_case_step WHERE step_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.stepId}
+        </foreach>
+    </delete>
+
+    <select id="getTestCaseTreeBySystemId" parameterType="java.lang.Integer"
+            resultType="com.testcase.frame.vo.TestCaseTree">
+        SELECT
+            step.step_id AS id,
+            step.step_name AS name,
+            step.step_parent_id AS parentId,
+            step.single_step_mark_id AS singleStepMarkId,
+            step.last_step_mark_id AS lastStepMarkId,
+            attr.test_case_type AS testCaseType,
+            attr.test_case_title AS testCaseTitle,
+            attr.priority AS priority,
+            attr.precondition AS precondition,
+            attr.manage_module AS manageModule,
+            attr.expected AS expected,
+            attr.applicable_stage AS applicableStage
+        FROM
+            test_case_step step
+        LEFT JOIN step_attr attr ON step.step_id = attr.step_id
+        WHERE
+            system_id = #{systemId} AND module_id = #{moduleId}
+            AND FIND_IN_SET(step.step_id,queryParentStepList(step.step_id))
+            ORDER BY step.step_id
+    </select>
+
+    <select id="getParentStepAndAttrById" resultType="com.testcase.frame.vo.TestCaseTree"
+            parameterType="java.lang.Integer">
+        SELECT
+            step.step_id AS id,
+            step.step_name AS name,
+            step.step_parent_id AS parentId,
+            step.single_step_mark_id AS singleStepMarkId,
+            attr.test_case_type AS testCaseType,
+            attr.test_case_title AS testCaseTitle,
+            attr.priority AS priority,
+            attr.precondition AS precondition,
+            attr.manage_module AS manageModule,
+            attr.expected AS expected,
+            attr.applicable_stage AS applicableStage
+        FROM
+            test_case_step step
+        LEFT JOIN step_attr attr ON step.step_id = attr.step_id
+        WHERE
+            FIND_IN_SET(step.step_id,queryParentStepList(#{stepId}))
+    </select>
+</mapper>
