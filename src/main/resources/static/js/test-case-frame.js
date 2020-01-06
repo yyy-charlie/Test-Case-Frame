@@ -518,9 +518,9 @@ function addHoverDom(treeId, treeNode) {
                     },
                     validators: {
                         greaterThan: {
-                            value: 1,
+                            value: 0,
                             inclusive: false,
-                            message: '最大值需要大于等于2'
+                            message: '最大值需要大于等于1'
                         }
                     },
                     validType: "positiveNumber"
@@ -537,41 +537,48 @@ function addHoverDom(treeId, treeNode) {
 
 function batchAddStepsCommit(e, oModal) {
     let oVal = oModal.getValues();
+    var minLength = oVal.minLength;
+    var maxLength = oVal.maxLength;
+    if (minLength > maxLength) {
+        alert("最小值不能大于最大值！");
+    } else {
+        var data = {
+            stepObj: oVal.stepObj,
+            minLength: minLength,
+            maxLength: maxLength,
+            systemId: systemId,
+            moduleId: moduleId,
+            stepParentId: batchAddStepsModal.treeNode.id
+        };
+        requestAjax('post', 'testCase/addTestCaseStepBasedOnStepObj', 'false', JSON.stringify(data), 'json', function (res) {
+            alert(res.description);
+            if (res.code === 200) {
 
-    var data = {
-        stepObj: oVal.stepObj,
-        minLength: oVal.minLength,
-        maxLength: oVal.maxLength,
-        systemId: systemId,
-        moduleId: moduleId,
-        stepParentId: batchAddStepsModal.treeNode.id
-    };
-    requestAjax('post', 'testCase/addTestCaseStepBasedOnStepObj', 'false', JSON.stringify(data), 'json', function (res) {
-        alert(res.description);
-        if (res.code === 200) {
+                //隐藏模态框
+                oModal.hide();
 
-            //隐藏模态框
-            oModal.hide();
+                //新增节点
+                var treeObj = $.fn.zTree.getZTreeObj("testCaseStepTree");
+                var arr = [];
+                $.each(res.data, function (index, item) {
+                    let childZNode = new ZtreeNode(item); //构造子节点
+                    arr.push(childZNode);
+                });
 
-            //新增节点
-            var treeObj = $.fn.zTree.getZTreeObj("testCaseStepTree");
-            var arr = [];
-            $.each(res.data, function (index, item) {
-                let childZNode = new ZtreeNode(item); //构造子节点
-                arr.push(childZNode);
-            });
-            // treeObj.addNodes(batchAddStepsModal.treeNode, arr);
+                $.each(arr, function (index, ele) {
+                    if (index === 0) {
+                        treeObj.addNodes(batchAddStepsModal.treeNode, ele);
+                    } else {
+                        var newParent = treeObj.getNodeByParam("id", arr[0].id, batchAddStepsModal.treeNode);
+                        treeObj.addNodes(newParent, ele);
+                    }
+                });
+            } else {
+                alert(res.description);
+            }
+        });
+    }
 
-            $.each(arr, function (index, ele) {
-                if (index === 0) {
-                    treeObj.addNodes(batchAddStepsModal.treeNode, ele);
-                } else {
-                    var newParent = treeObj.getNodeByParam("id", arr[0].id, batchAddStepsModal.treeNode);
-                    treeObj.addNodes(newParent, ele);
-                }
-            });
-        }
-    });
 }
 
 function ZtreeNode(item) {
@@ -1154,7 +1161,7 @@ function stepUnbindModuleBtn() {
     var nodes = treeObj.getCheckedNodes(true);
     if (nodes.length === 0) {
         alert("请选择步骤");
-    }else {
+    } else {
         var r = confirm("确定取消绑定模块吗？");
         if (r) {
             var stepList = [];

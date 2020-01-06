@@ -16,26 +16,28 @@ public class StepObj {
         List<StringBuffer> stringBufferList = new ArrayList<>(5);
         //最小值
         StringBuffer minContent = getMinContent(minLength);
+        stringBufferList.add(minContent);
+
         //如果最大值不等于最小值，则获取最大值的内容
         if (maxLength - minLength != 0) {
             //最大值
             StringBuffer maxContent = getMaxContent(maxLength);
             stringBufferList.add(maxContent);
+            //大于最大值
+            StringBuffer maxAddOneContent = getMaxAddOneContent(maxLength);
+            stringBufferList.add(maxAddOneContent);
+            if (minLength > 1) {
+                //小于最小值
+                StringBuffer minSubOneContent = getMinSubOneContent(minLength);
+                stringBufferList.add(minSubOneContent);
+            }
         }
         if (maxLength - minLength > 1) {
             //中间值
             StringBuffer middleContent = getMiddleContent(minLength, maxLength);
             stringBufferList.add(middleContent);
         }
-        if (minLength > 1) {
-            //小于最小值
-            StringBuffer minSubOneContent = getMinSubOneContent(minLength);
-            stringBufferList.add(minSubOneContent);
-        }
-        //大于最大值
-        StringBuffer maxAddOneContent = getMaxAddOneContent(maxLength);
-        stringBufferList.add(minContent);
-        stringBufferList.add(maxAddOneContent);
+
         return stringBufferList;
     }
 

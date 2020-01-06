@@ -55,14 +55,21 @@ public class TestCaseStepServiceImpl implements ITestCaseStepService {
         testCaseStep.setStepName(testCaseStepBo.getStepObj() + "输入");
         testCaseStep.setStepParentId(testCaseStepBo.getStepParentId());
         testCaseStep.setSingleStepMarkId(Const.REPEAT_STEP);
-        TestCaseStep caseStep = testCaseStepCrudService.addTestCaseStep(testCaseStep);
-        if (ToolUtils.isNull(caseStep)) {
-            return new ArrayList<>();
-        }
+
         Integer minLength = testCaseStepBo.getMinLength();
         Integer maxLength = testCaseStepBo.getMaxLength();
         Integer systemId = testCaseStepBo.getSystemId();
         Integer moduleId = testCaseStepBo.getModuleId();
+
+        if (minLength > maxLength) {
+            return new ArrayList<>();
+        }
+
+        TestCaseStep caseStep = testCaseStepCrudService.addTestCaseStep(testCaseStep);
+        if (ToolUtils.isNull(caseStep)) {
+            return new ArrayList<>();
+        }
+
         Integer stepParentId = caseStep.getStepId();
 
         List<StringBuffer> allContent = new ArrayList<>(16);
