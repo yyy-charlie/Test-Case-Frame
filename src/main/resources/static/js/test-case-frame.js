@@ -539,7 +539,7 @@ function batchAddStepsCommit(e, oModal) {
     let oVal = oModal.getValues();
     var minLength = oVal.minLength;
     var maxLength = oVal.maxLength;
-    if (minLength > maxLength) {
+    if (parseInt(minLength) > parseInt(maxLength)) {
         alert("最小值不能大于最大值！");
     } else {
         var data = {
