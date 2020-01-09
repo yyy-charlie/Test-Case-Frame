@@ -14,6 +14,12 @@ import java.util.List;
 public class StepObj {
     public List<StringBuffer> getGenerateContent(int minLength, int maxLength) {
         List<StringBuffer> stringBufferList = new ArrayList<>(5);
+        if (minLength > 1) {
+            //小于最小值
+            StringBuffer minSubOneContent = getMinSubOneContent(minLength);
+            stringBufferList.add(minSubOneContent);
+        }
+
         //最小值
         StringBuffer minContent = getMinContent(minLength);
         stringBufferList.add(minContent);
@@ -23,15 +29,12 @@ public class StepObj {
             //最大值
             StringBuffer maxContent = getMaxContent(maxLength);
             stringBufferList.add(maxContent);
-            //大于最大值
-            StringBuffer maxAddOneContent = getMaxAddOneContent(maxLength);
-            stringBufferList.add(maxAddOneContent);
-            if (minLength > 1) {
-                //小于最小值
-                StringBuffer minSubOneContent = getMinSubOneContent(minLength);
-                stringBufferList.add(minSubOneContent);
-            }
         }
+
+        //大于最大值
+        StringBuffer maxAddOneContent = getMaxAddOneContent(maxLength);
+        stringBufferList.add(maxAddOneContent);
+
         if (maxLength - minLength > 1) {
             //中间值
             StringBuffer middleContent = getMiddleContent(minLength, maxLength);
