@@ -507,7 +507,7 @@ function addHoverDom(treeId, treeNode) {
                         greaterThan: {
                             value: 0,
                             inclusive: false,
-                            message: '最大值需要大于等于1'
+                            message: '最小值需要大于等于1'
                         }
                     },
                     validType: "positiveNumber"
