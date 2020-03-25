@@ -76,31 +76,35 @@
                             <h3 class="panel-title">用例步骤树</h3>
                         </div>
 
-                        <button type="button" class="btn btn-primary" onclick="addRootStepBtn()">
-                            新增根节点
-                        </button>
+                        <div style="margin-top: 15px;margin-left: 15px;">
+                            <button type="button" class="btn btn-primary" onclick="addRootStepBtn()">
+                                新增根节点
+                            </button>
 
-                        <button type="button" class="btn btn-primary" onclick="stepBindModuleBtn()">
-                            批量绑定模块
-                        </button>
+                            <button type="button" class="btn btn-primary" onclick="stepBindModuleBtn()">
+                                批量绑定模块
+                            </button>
 
-                        <button type="button" class="btn btn-primary" onclick="stepUnbindModuleBtn()">
-                            批量取消绑定模块
-                        </button>
+                            <button type="button" class="btn btn-primary" onclick="stepUnbindModuleBtn()">
+                                批量取消绑定模块
+                            </button>
 
-                        <button type="button" class="btn btn-primary" onclick="previewExcel()">
-                            预览Excel
-                        </button>
+                            <button type="button" class="btn btn-primary" onclick="previewExcel()">
+                                预览Excel
+                            </button>
 
-                        <button type="button" class="btn btn-primary" onclick="exportExcel()">
-                            导出Excel
-                        </button>
-                        <div id="testCaseStepTree" class="ztree" style="height: 640px;overflow: scroll;">
+                            <button type="button" class="btn btn-primary" onclick="exportExcel()">
+                                导出Excel
+                            </button>
+                        </div>
+
+                        <div id="testCaseStepTree" class="ztree" style="height: 684px;overflow: scroll;">
                         </div>
                     </div>
 
                     <!--编辑步骤面板-->
-                    <div class="panel panel-default col-md-3" style="padding: 0;" id="updateStepPanel">
+                    <div class="panel panel-default col-md-3" style="padding: 0;height: 773px;width: 392px;"
+                         id="updateStepPanel">
                         <div class="panel-heading">
                             <h3 class="panel-title">编辑步骤</h3>
                         </div>
@@ -176,14 +180,16 @@
                             <!--                            <button type="button" class="btn btn-default" data-dismiss="modal" id="operateCancel">-->
                             <!--                                取消-->
                             <!--                            </button>-->
-                            <button type="button" class="btn btn-primary" onclick="updateStepBtn()">
+                            <button style="margin-right: 15px" type="button" class="btn btn-primary"
+                                    onclick="updateStepBtn()">
                                 确定
                             </button>
                         </div>
                     </div>
 
                     <!--新增步骤面板-->
-                    <div class="panel panel-default col-md-3" style="padding: 0;display: none;" id="addStepPanel">
+                    <div class="panel panel-default col-md-3"
+                         style="padding: 0;display: none;height: 773px;width: 392px;" id="addStepPanel">
                         <div class="panel-heading">
                             <h3 class="panel-title">新增步骤</h3>
                         </div>
@@ -258,7 +264,7 @@
                             <!--                            <button type="button" class="btn btn-default" data-dismiss="modal" id="operateCancel">-->
                             <!--                                取消-->
                             <!--                            </button>-->
-                            <button type="button" class="btn btn-primary" onclick="addStepBtn()">
+                            <button type="button" style="margin-right: 15px" class="btn btn-primary" onclick="addStepBtn()">
                                 确定
                             </button>
                         </div>
@@ -271,9 +277,11 @@
             <div class="panel panel-primary" id="formManage" style="height: 843px;">
                 <div class="panel-heading">步骤模块管理</div>
                 <div class="panel-body">
-                    <button type="button" class="btn btn-primary" onclick="addModuleBtn()">
-                        新增模块
-                    </button>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" onclick="addModuleBtn()">
+                            新增模块
+                        </button>
+                    </div>
                     <div class="tableInfo table-responsive" id="stepModule">
                         <table id="stepModuleTable" class="text-nowrap table"></table>
                     </div>

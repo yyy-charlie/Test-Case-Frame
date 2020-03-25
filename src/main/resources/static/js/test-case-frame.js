@@ -67,7 +67,7 @@ function initTable() {
         showExport: false,
         showColumns: false,
         showPaginationSwitch: false,
-        height: 500,
+        height: 720,
         pageNumber: 1,
         pageSize: 1000,
         pageList: []
