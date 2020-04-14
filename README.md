@@ -20,3 +20,8 @@
 
 其中只有第六步的操作不一样，可以把重复的内容提取出来，那么就可以看成是一个树型结构
 ![测试用例步骤Xmind](https://github.com/yyy-charlie/Test-Case-Frame/blob/master/images/测试用例步骤XMind.png)
+
+
+使用自动生成测试用例框架只需要输入必须的步骤，对于那些重复的关于边界值测试的步骤可以自动生成
+![批量新增步骤1](https://github.com/yyy-charlie/Test-Case-Frame/blob/master/images/自动生成测试用例示例1.png)
+![批量新增步骤2](https://github.com/yyy-charlie/Test-Case-Frame/blob/master/images/自动生成测试用例示例2.png)
