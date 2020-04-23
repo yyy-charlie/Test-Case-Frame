@@ -11,7 +11,12 @@ import java.util.List;
  * @Author ycn
  * @Date 2019-10-14
  **/
-public class NumberObj extends StepObj {
+public class NumberObj implements StepStrategy {
+
+    @Override
+    public String getType() {
+        return "number";
+    }
 
     /**
      * 随机获取最小长度的数字

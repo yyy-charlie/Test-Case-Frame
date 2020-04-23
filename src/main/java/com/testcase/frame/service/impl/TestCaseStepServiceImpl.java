@@ -27,15 +27,9 @@ public class TestCaseStepServiceImpl implements ITestCaseStepService {
 
     private ITestCaseStepCrudService testCaseStepCrudService;
 
-    private StepAttrMapper stepAttrMapper;
-
-    private StepModuleMapper stepModuleMapper;
-
     @Autowired
-    public TestCaseStepServiceImpl(ITestCaseStepCrudService testCaseStepCrudService, StepAttrMapper stepAttrMapper, StepModuleMapper stepModuleMapper) {
+    public TestCaseStepServiceImpl(ITestCaseStepCrudService testCaseStepCrudService) {
         this.testCaseStepCrudService = testCaseStepCrudService;
-        this.stepAttrMapper = stepAttrMapper;
-        this.stepModuleMapper = stepModuleMapper;
     }
 
     public TestCaseStepServiceImpl() {
@@ -49,11 +43,8 @@ public class TestCaseStepServiceImpl implements ITestCaseStepService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public List<TestCaseStep> addTestCaseStepBasedOnStepObj(TestCaseStepBO testCaseStepBo) {
-        TestCaseStep testCaseStep = new TestCaseStep();
-        testCaseStep.setSystemId(testCaseStepBo.getSystemId());
-        testCaseStep.setModuleId(testCaseStepBo.getModuleId());
+        TestCaseStep testCaseStep = ToolUtils.autoCopyProperties(testCaseStepBo, TestCaseStep.class);
         testCaseStep.setStepName(testCaseStepBo.getStepObj() + "输入");
-        testCaseStep.setStepParentId(testCaseStepBo.getStepParentId());
         testCaseStep.setSingleStepMarkId(Const.REPEAT_STEP);
 
         Integer minLength = testCaseStepBo.getMinLength();
@@ -72,31 +63,42 @@ public class TestCaseStepServiceImpl implements ITestCaseStepService {
 
         Integer stepParentId = caseStep.getStepId();
 
-        List<StringBuffer> allContent = new ArrayList<>(16);
-        StepObj letterObj = new LetterObj();
-        List<StringBuffer> letterContent = letterObj.getGenerateContent(minLength, maxLength);
-        allContent.addAll(letterContent);
-
-        StepObj numberObj = new NumberObj();
-        List<StringBuffer> numberContent = numberObj.getGenerateContent(minLength, maxLength);
-        allContent.addAll(numberContent);
-
-        StepObj chineseObj = new ChineseObj();
-        List<StringBuffer> chineseContent = chineseObj.getGenerateContent(minLength, maxLength);
-        allContent.addAll(chineseContent);
-
-        StepObj symbolObj = new SymbolObj();
-        List<StringBuffer> symbolObjGenerateContent = symbolObj.getGenerateContent(minLength, maxLength);
-        allContent.addAll(symbolObjGenerateContent);
-
-        allContent.add(new StringBuffer("为空"));
+        //获取所有的用例内容
+        List<StringBuffer> allContent = getAllContent(minLength, maxLength);
+        //将用例报装内容成对象
         List<TestCaseStep> testCaseStepList = getAddStepList(allContent, stepParentId, systemId, moduleId);
 
         List<TestCaseStep> resultList = new ArrayList<>(16);
-        resultList.add(caseStep);
         List<TestCaseStep> testCaseStepList1 = testCaseStepCrudService.batchAddTestCaseStepList(testCaseStepList);
+        //如姓名输入
+        resultList.add(caseStep);
+        //具体用例步骤
         resultList.addAll(testCaseStepList1);
         return resultList;
+    }
+
+    /**
+     * 获取所有的用例内容
+     *
+     * @param minLength
+     * @param maxLength
+     * @return
+     */
+    private List<StringBuffer> getAllContent(Integer minLength, Integer maxLength) {
+        List<StringBuffer> allContent = new ArrayList<>(16);
+
+        StepObj stepObj = new StepObj();
+        List<StringBuffer> chineseContent = stepObj.getGenerateContent("chinese", minLength, maxLength);
+        List<StringBuffer> letterContent = stepObj.getGenerateContent("letter", minLength, maxLength);
+        List<StringBuffer> numberContent = stepObj.getGenerateContent("number", minLength, maxLength);
+        List<StringBuffer> symbolObjGenerateContent = stepObj.getGenerateContent("symbol", minLength, maxLength);
+        allContent.addAll(chineseContent);
+        allContent.addAll(letterContent);
+        allContent.addAll(numberContent);
+        allContent.addAll(symbolObjGenerateContent);
+
+        allContent.add(new StringBuffer("为空"));
+        return allContent;
     }
 
     private List<TestCaseStep> getAddStepList(List<StringBuffer> content, Integer stepParentId, Integer systemId, Integer moduleId) {

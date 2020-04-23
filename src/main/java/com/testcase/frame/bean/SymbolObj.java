@@ -8,7 +8,12 @@ import com.testcase.frame.common.Util;
  * @Author ycn
  * @Date 2019-10-18
  **/
-public class SymbolObj extends StepObj {
+public class SymbolObj implements StepStrategy {
+
+    @Override
+    public String getType() {
+        return "symbol";
+    }
 
     /**
      * 随机获取最小长度的特殊符号

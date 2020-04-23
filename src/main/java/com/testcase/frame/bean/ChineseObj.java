@@ -8,7 +8,12 @@ import com.testcase.frame.common.Util;
  * @Author ycn
  * @Date 2019-10-14
  **/
-public class ChineseObj extends StepObj {
+public class ChineseObj implements StepStrategy {
+
+    @Override
+    public String getType() {
+        return "chinese";
+    }
 
     /**
      * 随机获取最小长度的汉字

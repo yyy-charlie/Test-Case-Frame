@@ -12,7 +12,12 @@ import java.util.List;
  * @Author ycn
  * @Date 2019-10-14
  **/
-public class LetterObj extends StepObj {
+public class LetterObj implements StepStrategy {
+
+    @Override
+    public String getType() {
+        return "letter";
+    }
 
     /**
      * 随机获取最小长度的字母
